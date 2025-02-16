@@ -5,6 +5,7 @@
 Our application allows users to create and manage events.  Users will be able to see upcoming events that they have RSVP’d to from the home page, and they can select events from the list to see further details about each event.  Users can create events, set details for the events, and invite others through PlanIt.  Event organizers can also see the status of those who have been invited to the event to know who will be attending.  PlanIt allows users to “liftoff” their event planning skills!  
 
 ## Storyboard
+![Storyboard](https://github.com/dominichscott/EnterpriseAppDevGroup3/blob/main/PlanItStoryboard.png)
 
 ## Functional Requirements
 
@@ -38,9 +39,9 @@ Functional Requirements #2
     - **When** a user is on home page, Sees upcoming events, Clicks on event, and RSVPS to event
     - **Then** event shows the status of their RSVP
 
-### Class Diagram
+## Class Diagram
 
-### JSON Schema
+## JSON Schema
 >{
 >  "EventDTO": {
 >    "properties": {
@@ -79,10 +80,10 @@ Functional Requirements #2
 >  }
 >}
 
-### Scrum Roles
+## Scrum Roles
 
-UI - Emma Danner, Calvin Yeboah
-Business Logic and Persistence - Noah Wardega
+UI - Emma Danner, Calvin Yeboah<br>
+Business Logic and Persistence - Noah Wardega<br>
 Product Owner/Scrum Master - Dominic Scott
 
 ## Project Link
