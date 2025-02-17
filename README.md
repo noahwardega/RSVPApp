@@ -41,6 +41,8 @@ Functional Requirements #2
 
 ## Class Diagram
 
+![Class Diagram](https://github.com/dominichscott/EnterpriseAppDevGroup3/blob/main/PlanItClassDiagram.png)
+
 ## JSON Schema
 >{
 >  "EventDTO": {
