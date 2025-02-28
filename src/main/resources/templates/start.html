@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>PlanIt</title>
@@ -7,5 +7,14 @@
 <body>
     <h1>PlanIt</h1>
     <h2>Liftoff your planning skills!</h2>
+
+    <p th:text="${eventDTO}"/>
+
+    <form action="#" th:Action="@{/saveEvent}" th:object="${eventDTO}" method = "GET"?><br>
+        <label>Event Name</label><input type="text" name="name" th:field="*{name}"/><br>
+        <label>Time</label><input type="text" name="date" th:field="*{date}"/><br>
+        <label>Location</label><input type="text" name="location" th:field="*{location}"/><br>
+        <button name="submit" type="submit" value="0">Schedule</button><br>
+    </form>
 </body>
 </html>
