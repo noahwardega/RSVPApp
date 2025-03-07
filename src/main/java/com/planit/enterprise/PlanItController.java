@@ -31,6 +31,12 @@ public class PlanItController {
         return "start";
     }
 
+    /* Sends user to createEvent page when Create Event button is pressed */
+    @RequestMapping("/createEvent")
+    public String createEvent(EventDTO event){
+        return "createEvent";
+    }
+
     /* @GetMapping("/event")
     /* @ResponseBody
     /* public List<Event> getAllEvents() { return IEventService.getAllEvents(); }

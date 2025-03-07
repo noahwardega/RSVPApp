@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="index.css">
+    <title>PlanIt</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: titleheader"></div>
+
+    <div th:replace="fragments/topnav :: navbar"></div>
+
+    <!--Not sure why the eventDTO stuff doesn't seem to want to not give an error,
+    but yet somehow it's still reaching the variable to store it?-->
+
+    <p th:text="${eventDTO}"/>
+
+    <form action="#" th:Action="@{/saveEvent}" th:object="${eventDTO}" method = "GET"><br>
+        <label>Event Name</label><input type="text" name="name" th:field="*{name}"/><br>
+        <label>Time</label><input type="text" name="date" th:field="*{date}"/><br>
+        <label>Location</label><input type="text" name="location" th:field="*{location}"/><br>
+        <button name="submit" type="submit" value="0">Schedule</button><br>
+    </form>
+</body>
+</html>
