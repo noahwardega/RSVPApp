@@ -2,24 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="index.css">
-    <title>PlanIt</title>
+    <link rel="stylesheet" href="main.css">
+    <title>PlanIt - Create Event</title>
+    <link rel="icon" href=".\images\planetIcon.svg" type="image/x.icon"> <!--idk why this icon thing won't work-->
+    <style>
+        body{
+            background-color: midnightblue;
+            color: white;
+        }
+
+        #eventForm{
+            margin: auto;
+            width: 50%;
+            border: 2px;
+            border-radius: 25px;
+            padding: 30px;
+            background-color: lightskyblue;
+            text-align: center;
+        }
+
+        .formTitle{
+            color: black;
+            font-size: 2.0em;
+        }
+
+        .fieldTitle{
+            color: black;
+            font-size: 1.2em;
+            line-height: 3.0;
+        }
+
+        .formButton{
+            line-height: 3.0;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
+            font-size: 1.2em;
+            color: white;font-size: 1.2em;font-size: 1.2em;
+            background-color: darkslateblue;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
     <div th:replace="fragments/header :: titleheader"></div>
 
-    <div th:replace="fragments/topnav :: navbar"></div>
-
     <!--Not sure why the eventDTO stuff doesn't seem to want to not give an error,
     but yet somehow it's still reaching the variable to store it?-->
 
-    <p th:text="${eventDTO}"/>
+    <!--<p th:text="${eventDTO}"/>-->
 
-    <form action="#" th:Action="@{/saveEvent}" th:object="${eventDTO}" method = "GET"><br>
-        <label>Event Name</label><input type="text" name="name" th:field="*{name}"/><br>
-        <label>Time</label><input type="text" name="date" th:field="*{date}"/><br>
-        <label>Location</label><input type="text" name="location" th:field="*{location}"/><br>
-        <button name="submit" type="submit" value="0">Schedule</button><br>
-    </form>
+    <div id="eventForm">
+        <p class="formTitle">Create a New Event</p>
+        <form action="#" th:Action="@{/saveEvent}" th:object="${eventDTO}" method = "GET"><br>
+            <label class="fieldTitle">Event Name </label><input type="text" name="name" th:field="*{name}"/><br>
+            <label class="fieldTitle">Time </label><input type="text" name="date" th:field="*{date}"/><br>
+            <label class="fieldTitle">Location </label><input type="text" name="location" th:field="*{location}"/><br><br>
+            <button class="formButton" name="submit" type="submit" value="0">Schedule</button><br>
+        </form>
+    </div>
 </body>
 </html>

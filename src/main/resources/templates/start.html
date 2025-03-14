@@ -2,17 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="index.css">
-    <title>PlanIt</title>
+    <link rel="stylesheet" href="main.css">
+    <title>PlanIt - Create Event</title>
+    <link rel="icon" href=".\images\planetIcon.svg" type="image/x.icon"> <!--idk why this icon thing won't work-->
+    <style>
+        body{
+            background-color: midnightblue;
+            color: white;
+        }
+
+        .overarchingHeader{
+            color: white;
+            font-size: 2.0em;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div th:replace="fragments/header :: titleheader"></div>
 
     <div th:replace="fragments/topnav :: navbar"></div>
 
-    <p th:text="${eventDTO}"/>
+    <!--<p th:text="${eventDTO}"/>-->
 
-    <h3>Events will go here</h3>
+    <h3 class="overarchingHeader">Upcoming Events</h3>
+    <!--plan is to have events show up each in their own little boxes as div elements, will be probably 2 across in widest
+    view and will stack when screen is smaller-->
 
 </body>
 </html>
