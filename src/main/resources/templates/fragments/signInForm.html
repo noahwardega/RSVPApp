@@ -1,0 +1,18 @@
+<div th:fragment="signInSpot">
+    <nav>
+        <div style="margin: auto; width: 50%; border: 2px; border-radius: 25px; padding: 30px;
+             background-color: lightskyblue; text-align: center;">
+
+            <p style="color: black; font-size: 1.5em; line-height: 3.0;">Sign In</p>
+
+            <form action="#" th:Action="@{/signIn}" th:object="${userDTO}" method = "GET"><br>
+                <label style="color: black; font-size: 1.2em; line-height: 3.0;">Email
+                  <input type="text" name="email" th:field="*{email}"/></label>
+                <button style="line-height: 3.0; margin-left: 20px; padding-top: 5px; padding-bottom: 5px; padding-left: 20px;
+                        padding-right: 20px; font-size: 1.2em; color: white; background-color: darkslateblue;
+                        border-radius: 10px;" name="submit" type="submit" value="0">Sign In</button><br><br>
+            </form>
+
+        </div>
+    </nav>
+</div>

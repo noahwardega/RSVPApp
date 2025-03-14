@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="main.css">
+    <title>PlanIt - Sign In</title>
+    <link rel="icon" href=".\images\planetIcon.svg" type="image/x.icon"> <!--idk why this icon thing won't work-->
+    <style>
+        body{
+            background-color: midnightblue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/header :: titleheader"></div>
+
+    <div th:replace="fragments/signInForm :: signInSpot"></div>
+</body>

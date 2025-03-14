@@ -1,6 +1,7 @@
 package com.planit.enterprise;
 
 import com.planit.enterprise.dto.EventDTO;
+import com.planit.enterprise.dto.UserDTO;
 import com.planit.enterprise.service.interfaces.IEventService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,19 +16,24 @@ import java.util.List;
 public class PlanItController {
     /**
      * Handle the root (/) endpoint and return a start page
-     * @return
      */
+
     @RequestMapping("/")
+    public String signIn(UserDTO userDTO){
+        return "signIn";
+    }
+
+    @RequestMapping("/signIn")
+    public String start(UserDTO userDTO){
+        return "start";
+    }
+
+    @RequestMapping("/saveEvent")
     public String index(Model model){
           EventDTO event = new EventDTO();
           event.setName("Test Event");
           event.setDate("1/1/2025");
           model.addAttribute(event);
-        return "start";
-    }
-
-    @RequestMapping("/saveEvent")
-    public String saveEvent(EventDTO event){
         return "start";
     }
 
