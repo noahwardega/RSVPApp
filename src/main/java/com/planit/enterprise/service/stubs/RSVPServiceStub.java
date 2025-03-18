@@ -20,11 +20,11 @@ public class RSVPServiceStub implements IRSVPService {
 
     @Override
     public Boolean updateStatus(int eventId, int userId, int status) {
-        return true;
+        return false;
     }
 
     @Override
     public Boolean createRSVP(int eventId, int userId) {
-        return true;
+        return false;
     }
 }

@@ -24,7 +24,7 @@ public class UserServiceStub implements IUserService {
 
     @Override
     public Boolean doesEmailExist(String email) {
-        Boolean exists = false;
+        boolean exists = false;
         if (Objects.equals(email, "debbie@email.com"))
         {
             exists = true;
@@ -33,7 +33,7 @@ public class UserServiceStub implements IUserService {
     }
 
     @Override
-    public int registerUser(String fname, String lname, String email) {
+    public int registerUser(String fName, String lName, String email) {
         return 1;
     }
 }

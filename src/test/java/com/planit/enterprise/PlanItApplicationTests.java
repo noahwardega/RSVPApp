@@ -110,7 +110,8 @@ class PlanItApplicationTests {
         thenReturnOneEventWithNameTestEvent();
     }
 
-    @Test createEvent_createEventExample()
+    @Test
+    void createEvent_createEventExample()
     {
         givenEventDataIsAvailable();
         whenAddEventExample();
@@ -118,7 +119,7 @@ class PlanItApplicationTests {
     }
 
     private void whenAddEventExample() {
-        checkId = eventService.addEvent("Example", "1/1/2000", "Cincinnati");
+        checkId = eventService.createEvent("Example", "1/1/2000", "Cincinnati");
     }
 
     private void thenReturnNewEventIDAbove0() {

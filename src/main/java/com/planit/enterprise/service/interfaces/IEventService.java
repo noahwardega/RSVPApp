@@ -5,13 +5,13 @@ import com.planit.enterprise.dto.EventDTO;
 
 public interface IEventService {
     //get all events
-    List<EventDTO> getAllEvents();
+    List<EventDTO> fetchAllEvents();
 
     //update an event
-    void updateEvent(int eventId, EventDTO event);
+    boolean updateEvent(int eventId, EventDTO event);
 
     //delete an event
-    void deleteEvent(int eventId);
+    boolean deleteEvent(int eventId);
 
     /**
      * Fetch single object of class EventDTO given ID.
@@ -27,5 +27,5 @@ public interface IEventService {
      * @param location location event takes place
      * @return the event ID for newly created event, -1 on failure
      */
-    int addEvent(String name, String date, String location);
+    int createEvent(String name, String date, String location);
 }
