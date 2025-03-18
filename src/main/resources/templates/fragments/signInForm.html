@@ -1,0 +1,146 @@
+<div th:fragment="signInSpot">
+    <div class="signin-container">
+        <div class="signin-card">
+            <h2 class="signin-title">Welcome to PlanIt</h2>
+            <p class="signin-subtitle">Sign in to access your events</p>
+            
+            <!-- Error message display -->
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+            <form action="#" th:Action="@{/signIn}" th:object="${userDTO}" method="GET" class="signin-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" id="email" class="form-control" name="email" th:field="*{email}" 
+                               placeholder="Enter your email address" required />
+                    </div>
+                </div>
+                <button class="signin-button" name="submit" type="submit" value="0">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+            
+            <div class="signin-info">
+                <p>Enter your email to sign in or create a new account!</p>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .signin-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        
+        .signin-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 35px;
+            width: 90%;
+            max-width: 450px;
+            transition: transform 0.3s ease;
+        }
+        
+        .signin-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .signin-title {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .signin-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .signin-form {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .input-group {
+            display: flex;
+        }
+        
+        .input-group-text {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            padding: 12px 15px;
+        }
+        
+        .form-control {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 8px 8px 0;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        }
+        
+        .signin-button {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+        
+        .signin-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .signin-info {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</div>
