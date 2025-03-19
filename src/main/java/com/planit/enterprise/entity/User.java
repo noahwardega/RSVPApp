@@ -24,9 +24,18 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RSVP> rsvpEvents;
 
-    public User(int userId) {
+    // Constructor to initialize user without id (used for new users)
+    public User(String fName, String lName, String email) {
+        this.fName = fName;
+        this.lName = lName;
+        this.email = email;
     }
 
-    public User(String fName, String lName, String email) {
+    // Constructor to initialize user with id (used for fetching from DB)
+    public User(int id, String fName, String lName, String email) {
+        this.id = id;
+        this.fName = fName;
+        this.lName = lName;
+        this.email = email;
     }
 }

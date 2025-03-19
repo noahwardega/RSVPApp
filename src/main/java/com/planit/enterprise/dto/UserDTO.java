@@ -14,6 +14,7 @@ public class UserDTO {
         this.email = email;
     }
 
+
     // Getters and setters
     public int getId() {
         return id;
