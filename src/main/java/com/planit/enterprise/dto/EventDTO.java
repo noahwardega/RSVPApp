@@ -1,13 +1,10 @@
 package com.planit.enterprise.dto;
 
-import java.util.List;
-
 public class EventDTO {
     private int id;
     private String name;
     private String date;
     private String location;
-    private List<RSVPDTO> attendees;
 
     // Constructor with parameters
     public EventDTO(int id, String name, String date, String location) {
@@ -15,6 +12,10 @@ public class EventDTO {
         this.name = name;
         this.date = date;
         this.location = location;
+    }
+
+    // No-argument constructor
+    public EventDTO() {
     }
 
     // Getters and setters
@@ -48,14 +49,6 @@ public class EventDTO {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public List<RSVPDTO> getAttendees() {
-        return attendees;
-    }
-
-    public void setAttendees(List<RSVPDTO> attendees) {
-        this.attendees = attendees;
     }
 }
 
