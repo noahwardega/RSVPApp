@@ -6,208 +6,129 @@ import com.planit.enterprise.dto.UserDTO;
 import com.planit.enterprise.service.interfaces.IEventService;
 import com.planit.enterprise.service.interfaces.IRSVPService;
 import com.planit.enterprise.service.interfaces.IUserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class PlanItApplicationTests {
-
     @Autowired
     private IUserService userService;
-    private UserDTO user;
-    private Boolean check1;
-    private Boolean check2;
-    private int checkId;
-    @Autowired
-    private IRSVPService rsvpService;
-    List<RSVPDTO> rsvpList;
-    Boolean statusChangeSuccess;
-    Boolean addRSVPSuccess;
+
     @Autowired
     private IEventService eventService;
-    private EventDTO event;
 
+    @Autowired
+    private IRSVPService rsvpService;
+
+    private UserDTO testUser;
+    private EventDTO testEvent;
+    private int userId;
+    private int eventId;
+
+    @BeforeEach
+    void setup() {
+        // Save test user
+        userId = userService.registerUser("Debbie", "Doe", "debbiedoe@email.com");
+        testUser = userService.fetchUserByID(userId);
+
+        // Save test event
+        eventId = eventService.createEvent("Test Event", "2025-04-01", "New York");
+        testEvent = eventService.fetchEventByID(eventId);
+
+        // Ensure both are saved before creating an RSVP
+        assertNotNull(testUser);
+        assertNotNull(testEvent);
+    }
     @Test
     void contextLoads() {
+        assertNotNull(userService);
+        assertNotNull(eventService);
+        assertNotNull(rsvpService);
     }
 
     @Test
-    void fetchUserByID_returnsDebbieForID0()
-    {
-        givenUserDataIsAvailable();
-        whenSearchUserWithID0();
-        thenReturnOneUserWithNameDebbie();
+    void fetchUserByID_returnsCorrectUser() {
+        UserDTO user = userService.fetchUserByID(userId);
+        assertNotNull(user);
+        assertEquals("Debbie", user.getFName());
+        assertEquals("Doe", user.getLName());
     }
 
     @Test
-    void fetchUserByEmail_returnsDebbieForEmail()
-    {
-        givenUserDataIsAvailable();
-        whenSearchUserWithEmailDebbie();
-        thenReturnOneUserWithNameDebbie();
-    }
-
-    // Debbie's email returns true, gibberish returns false
-    @Test
-    void doesEmailExist_check2Emails()
-    {
-        givenUserDataIsAvailable();
-        whenCheckFor2EmailsExist();
-        thenReturnOneUserEmailExistsAndOtherDoesNot();
+    void fetchUserByEmail_returnsCorrectUser() {
+        UserDTO user = userService.fetchUserByEmail("debbiedoe@email.com");
+        assertNotNull(user);
+        assertEquals("Debbie", user.getFName());
     }
 
     @Test
-    void registerUser_successfullyCreateBrady()
-    {
-        givenUserDataIsAvailable();
-        whenAddUserBrady();
-        thenReturnNewUserIDAbove0();
+    void doesEmailExist_returnsTrueForExistingEmail() {
+        assertTrue(userService.doesEmailExist("Debbiedoe@email.com"));
+        assertFalse(userService.doesEmailExist("fake@email.com"));
     }
 
     @Test
-    void fetchAllByUserID_returnsOneEvent()
-    {
-        givenRSVPDataIsAvailable();
-        whenSearchAllRSVPWithUserID0();
-        thenReturnListWithOneItemAndNameDebbie();
+    void registerUser_createsNewUserSuccessfully() {
+        int newUserId = userService.registerUser("Jane", "Smith", "janesmith@email.com");
+        assertTrue(newUserId > 0);
+        UserDTO newUser = userService.fetchUserByID(newUserId);
+        assertEquals("Jane", newUser.getFName());
     }
 
     @Test
-    void fetchAllByEventID_returnsOneEvent()
-    {
-        givenRSVPDataIsAvailable();
-        whenSearchAllRSVPWithEventID0();
-        thenReturnListWithOneItemAndNameTestEvent();
-    }
-
-    @Test
-    void updateStatus_rsvpForTestEvent()
-    {
-        givenRSVPDataIsAvailable();
-        whenUpdateRSVPStatusOfID0();
-        thenReturnTrueIfChangeWasSuccessful();
-    }
-
-    @Test
-    void createRSVP_AddDebbieToEventID1()
-    {
-        givenRSVPDataIsAvailable();
-        whenAddRSVPEvent1();
-        thenReturnTrueOnSuccessfulRSVPCreation();
-    }
-
-    @Test
-    void fetchEventByID_returnsTestEventForID0()
-    {
-        givenEventDataIsAvailable();
-        whenSearchEventWithID0();
-        thenReturnOneEventWithNameTestEvent();
-    }
-
-    @Test createEvent_createEventExample()
-    {
-        givenEventDataIsAvailable();
-        whenAddEventExample();
-        thenReturnNewEventIDAbove0();
-    }
-
-    private void whenAddEventExample() {
-        checkId = eventService.addEvent("Example", "1/1/2000", "Cincinnati");
-    }
-
-    private void thenReturnNewEventIDAbove0() {
-        assertTrue(checkId > 0);
-    }
-
-    private void whenSearchEventWithID0() {
-        event = eventService.fetchEventByID(0);
-    }
-
-    private void thenReturnOneEventWithNameTestEvent() {
+    void fetchEventByID_returnsCorrectEvent() {
+        EventDTO event = eventService.fetchEventByID(eventId);
+        assertNotNull(event);
         assertEquals("Test Event", event.getName());
     }
 
-    private void givenEventDataIsAvailable() {
+    @Test
+    void createEvent_createsNewEventSuccessfully() {
+        int newEventId = eventService.createEvent("Conference", "2025-06-10", "Los Angeles");
+        assertTrue(newEventId > 0);
+        EventDTO newEvent = eventService.fetchEventByID(newEventId);
+        assertEquals("Conference", newEvent.getName());
     }
 
-    private void whenAddRSVPEvent1() {
-        addRSVPSuccess = rsvpService.createRSVP(1, 0);
+    @Test
+    void fetchAllByUserID_returnsRSVPs() {
+        rsvpService.createRSVP(eventId, userId);
+        List<RSVPDTO> rsvps = rsvpService.fetchAllByUserID(userId);
+        assertFalse(rsvps.isEmpty());
+        assertEquals(eventId, rsvps.get(0).getEventId());
     }
 
-    private void thenReturnTrueOnSuccessfulRSVPCreation() {
-        assertTrue(addRSVPSuccess);
+    @Test
+    void fetchAllByEventID_returnsRSVPs() {
+        rsvpService.createRSVP(eventId, userId);
+        List<RSVPDTO> rsvps = rsvpService.fetchAllByEventID(eventId);
+        assertFalse(rsvps.isEmpty());
+        assertEquals(userId, rsvps.get(0).getUserId());
     }
 
-    private void whenUpdateRSVPStatusOfID0() {
-        statusChangeSuccess = rsvpService.updateStatus(0, 0, 1);
+    @Test
+    void updateStatus_updatesRSVPStatusSuccessfully() {
+        rsvpService.createRSVP(eventId, userId);
+        boolean statusUpdated = rsvpService.updateStatus(eventId, userId, 1);
+        assertTrue(statusUpdated);
     }
 
-    private void thenReturnTrueIfChangeWasSuccessful() {
-        assertTrue(statusChangeSuccess);
+    @Test
+    void createRSVP_createsNewRSVP() {
+        boolean success = rsvpService.createRSVP(eventId, userId);
+        assertTrue(success);
+        List<RSVPDTO> rsvps = rsvpService.fetchAllByUserID(userId);
+        assertEquals(1, rsvps.size());
     }
-
-    private void whenSearchAllRSVPWithEventID0() {
-        rsvpList = rsvpService.fetchAllByEventID(0);
-    }
-
-    private void thenReturnListWithOneItemAndNameTestEvent() {
-        assertEquals(1, rsvpList.size());
-        assertEquals("Test Event", eventService.fetchEventByID(rsvpList.get(0).getEventId()).getName());
-    }
-
-    private void whenSearchAllRSVPWithUserID0() {
-        rsvpList = rsvpService.fetchAllByUserID(0);
-    }
-
-    private void thenReturnListWithOneItemAndNameDebbie() {
-        assertEquals(1, rsvpList.size());
-        assertEquals("Debbie", userService.fetchUserByID(rsvpList.get(0).getUserId()).getFName());
-    }
-
-    private void givenRSVPDataIsAvailable() {
-    }
-
-    private void whenAddUserBrady() {
-        checkId = userService.registerUser("Brady", "Test", "bradyTest@email.com");
-    }
-
-    private void thenReturnNewUserIDAbove0() {
-        assertTrue((checkId > 0));
-    }
-
-    private void whenCheckFor2EmailsExist() {
-        check1 = userService.doesEmailExist("debbie@gmail.com");
-        check2 = userService.doesEmailExist("12345badEmail");
-    }
-
-    private void thenReturnOneUserEmailExistsAndOtherDoesNot() {
-        assertEquals(true, check1);
-        assertEquals(false, check2);
-    }
-
-    private void whenSearchUserWithEmailDebbie()
-    {
-        user = userService.fetchUserByEmail("debbie@email.com");
-    }
-
-    private void givenUserDataIsAvailable() {
-    }
-
-    private void whenSearchUserWithID0()
-    {
-        user = userService.fetchUserByID(0);
-    }
-
-    private void thenReturnOneUserWithNameDebbie()
-    {
-        String name = user.getFName();
-        assertEquals("Debbie", name);
-    }
-
 }
+
+
+
