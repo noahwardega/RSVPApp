@@ -6,6 +6,15 @@ public class UserDTO {
     private String lName;
     private String email;
 
+    // Default no-argument constructor
+    public UserDTO() {
+        // Initialize with default values
+        this.id = 0;
+        this.fName = "";
+        this.lName = "";
+        this.email = "";
+    }
+
     // Constructor with parameters
     public UserDTO(int id, String fName, String lName, String email) {
         this.id = id;

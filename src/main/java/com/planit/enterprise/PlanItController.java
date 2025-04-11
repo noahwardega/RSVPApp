@@ -1,14 +1,11 @@
 package com.planit.enterprise;
 
-<<<<<<< Updated upstream
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-=======
 import com.planit.enterprise.dto.EventDTO;
 import com.planit.enterprise.dto.UserDTO;
 import com.planit.enterprise.service.interfaces.IEventService;
 import com.planit.enterprise.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
->>>>>>> Stashed changes
 
 @Controller
 public class PlanItController {
     
     @Autowired
+    @Qualifier("userServiceStub")
     private IUserService userService;
     
     @Autowired
@@ -85,11 +82,6 @@ public class PlanItController {
      * @return
      */
     @RequestMapping("/")
-<<<<<<< Updated upstream
-    public String index(){
-        return "start";
-    }
-=======
     public String signIn(Model model){
         UserDTO userDTO = new UserDTO();
         model.addAttribute("userDTO", userDTO);
@@ -144,13 +136,13 @@ public class PlanItController {
     @RequestMapping("/saveEvent")
     public String saveEvent(@ModelAttribute EventDTO eventDTO, @RequestParam(required = false) String inviteeIds, Model model){
         // Save the event
-        int eventId = eventService.addEvent(eventDTO.getName(), eventDTO.getDate(), eventDTO.getLocation());
+        int eventId = eventService.createEvent(eventDTO.getName(), eventDTO.getDate(), eventDTO.getLocation());
         
         // Process invitees if any were selected
         if (inviteeIds != null && !inviteeIds.isEmpty()) {
-            String[] inviteeIdArray = inviteeIds.split(",");
             // Here you would process the invitees, but for now we'll just log them
             System.out.println("Invitees for event " + eventDTO.getName() + ": " + inviteeIds);
+            System.out.println("Event created with ID: " + eventId);
         }
         
         // Always use Guest account (ID 100)
@@ -222,5 +214,4 @@ public class PlanItController {
     }
 
  */
->>>>>>> Stashed changes
 }
