@@ -39,8 +39,16 @@ public class EventController {
         User currentUser = userService.getCurrentUser(session);
 
         if (currentUser != null) {
+            // Fetch events the user is hosting
             List<Event> userEvents = eventService.getEventsByHost(currentUser);
-            List<RSVPDTO> invitedEvents = rsvpService.getRSVPsByUser(currentUser);
+
+            // Fetch RSVPs for events the user is invited to
+            List<RSVPDTO> invitedRSVPs = rsvpService.getRSVPsByUser(currentUser);
+
+            // Fetch the actual events based on RSVP event IDs
+            List<Event> invitedEvents = invitedRSVPs.stream()
+                    .map(rsvp -> eventService.getEventById(rsvp.getEventId())) // Assuming this method exists
+                    .collect(Collectors.toList());
 
             model.addAttribute("yourEvents", userEvents);
             model.addAttribute("invitedEvents", invitedEvents);
