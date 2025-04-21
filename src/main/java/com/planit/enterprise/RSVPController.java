@@ -4,55 +4,63 @@ import com.planit.enterprise.dto.RSVPDTO;
 import com.planit.enterprise.entity.Event;
 import com.planit.enterprise.entity.RSVP;
 import com.planit.enterprise.entity.User;
-import com.planit.enterprise.service.interfaces.IEventService;
 import com.planit.enterprise.service.interfaces.IRSVPService;
-import com.planit.enterprise.service.interfaces.IUserService;
+import com.planit.enterprise.service.interfaces.IEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
-@RequestMapping("/rsvp")
+@RequestMapping("/rsvps")
 public class RSVPController {
 
     @Autowired
     private IRSVPService rsvpService;
 
     @Autowired
-    private IUserService userService;
-
-    @Autowired
     private IEventService eventService;
 
+    @Autowired
+    private HttpSession session;
 
+    @GetMapping("/view/{eventId}")
+    public String viewEvent(@PathVariable("eventId") int eventId, Model model) {
+        User currentUser = (User) session.getAttribute("currentUser");
 
-    @GetMapping("/event/{eventId}")
-    public String getRSVPsForEvent(@PathVariable int eventId, Model model) {
-        Event event = eventService.getEventById(eventId);
-        List<RSVP> rsvps = rsvpService.getRSVPsByEvent(event);
+        if (currentUser != null) {
+            Event event = eventService.getEventById(eventId);
+            Optional<Event> optionalEvent = Optional.ofNullable(event);
 
-        model.addAttribute("event", event);
-        model.addAttribute("rsvps", rsvps);
-        return "eventRsvps";
-    }
+            if (optionalEvent.isPresent()) {
+                model.addAttribute("event", optionalEvent.get());
 
+                List<RSVPDTO> rsvps = rsvpService.getRSVPsByEvent(optionalEvent.get());
+                model.addAttribute("rsvps", rsvps);
 
-    @PostMapping
-    public String submitRSVP(@RequestParam int userId,
-                             @RequestParam int eventId,
-                             @RequestParam String status) {
-        User user = userService.getUserById(userId);
-        Event event = eventService.getEventById(eventId);
+                RSVPDTO rsvpStatus = rsvps.stream()
+                        .filter(rsvp -> rsvp.getUserId() == currentUser.getId())
+                        .findFirst()
+                        .orElse(null);
+                model.addAttribute("rsvpStatus", rsvpStatus != null ? rsvpStatus.getRsvpStatusAsString() : "Not RSVPed");
+            }
+        } else {
+            return "redirect:/signIn";
+        }
 
-        rsvpService.createOrUpdateRSVP(user, event, status);
-
-        return "redirect:/event/" + eventId;
+        return "viewEvent";
     }
 }
+
+
+
+
+
 
 
 

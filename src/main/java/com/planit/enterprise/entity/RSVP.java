@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.net.ssl.SSLSession;
 
 @Entity
-@NoArgsConstructor  // Lombok generates the default constructor
-@AllArgsConstructor  // Lombok generates a constructor with all fields
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "rsvps")
 public class RSVP {
@@ -40,6 +40,4 @@ public class RSVP {
     public int getEventId() {
         return event.getId();
     }
-
-
 }

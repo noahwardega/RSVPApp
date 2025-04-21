@@ -24,20 +24,25 @@ public class EventServiceImpl implements IEventService {
     @Autowired
     private UserRepository userRepository;
 
-    public EventDTO createEvent(String name, String location, LocalDateTime date, int hostId) {
-        User host = userRepository.findById(hostId)
-                .orElseThrow(() -> new RuntimeException("Host not found"));
+    @Override
+    public List<Event> getEventsByHost(User host) {
+        return eventRepository.findByHost(host);
+    }
 
+    public EventDTO createEvent(EventDTO eventDTO, User host) {
+        // Create a new event
         Event event = new Event();
-        event.setName(name);
-        event.setLocation(location);
-        event.setDate(date);
-        event.setHost(host);
+        event.setName(eventDTO.getName());
+        event.setLocation(eventDTO.getLocation());
+        event.setDate(eventDTO.getDate());
+        event.setHost(host); // Set the current user as the host
 
+        // Save the event
         eventRepository.save(event);
 
+        // Convert the event to DTO
         List<Integer> attendeeIds = event.getInvitedUsers().stream()
-                .map(User::getId) // Get the ID of each invited user
+                .map(User::getId)
                 .collect(Collectors.toList());
 
         return new EventDTO(
@@ -49,6 +54,7 @@ public class EventServiceImpl implements IEventService {
                 attendeeIds
         );
     }
+
 
     public List<EventDTO> getEventsByUser(User user) {
         List<Event> events = eventRepository.findByHost(user);

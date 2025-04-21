@@ -24,5 +24,10 @@ public class User {
 
     private String email;
 
+
+    public String getFName() {
+        return fName;
+    }
+
 }
 

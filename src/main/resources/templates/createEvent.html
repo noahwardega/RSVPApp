@@ -234,230 +234,98 @@
 
     <div id="eventForm">
         <p class="formTitle">Create a New Event</p>
-        <form action="#" th:Action="@{/saveEvent}" th:object="${eventDTO}" method = "GET"><br>
-            <label class="fieldTitle">Event Name <input type="text" name="name" th:field="*{name}"/></label><br>
-            <label class="fieldTitle">Time <input type="text" name="date" th:field="*{date}"/></label><br>
-            <label class="fieldTitle">Location <input type="text" name="location" th:field="*{location}"/></label><br>
-            
-            <!-- Invitee Section -->
+        <form th:action="@{/create}" th:object="${eventDTO}" method="post">
+            <label class="fieldTitle">Event Name
+                <input type="text" th:field="*{name}" required />
+            </label>
+
+            <label class="fieldTitle">Date & Time
+                <input type="datetime-local" th:field="*{date}" required />
+            </label>
+
+            <label class="fieldTitle">Location
+                <input type="text" th:field="*{location}" required />
+            </label>
+
+            <!-- Invitees -->
             <div class="invitee-section">
-                <label class="fieldTitle" style="line-height: 1.5;">Invitees</label>
+                <label class="fieldTitle">Invitees</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" id="inviteeSearch" class="form-control" placeholder="Type to search for team members..." aria-label="Search for users" autocomplete="off">
+                    <input type="text" id="inviteeSearch" class="form-control" placeholder="Search by email or name" autocomplete="off">
                 </div>
                 <div id="searchResults" class="list-group search-results"></div>
-                
-                <div class="invitee-list" id="inviteeList">
-                    <!-- Selected invitees will appear here -->
-                </div>
-                
-                <!-- Hidden input to store invitee IDs -->
-                <input type="hidden" id="inviteeIds" name="inviteeIds" value="">
+                <div class="invitee-list" id="inviteeList"></div>
+
+                <!-- Hidden input for IDs -->
+                <input type="hidden" id="inviteeIds" name="inviteeIds">
             </div>
-            
-            <button class="formButton" name="submit" type="submit" value="0">Schedule</button><br>
+
+            <button type="submit" class="formButton">Schedule</button>
         </form>
+
     </div>
     
     <!-- Add Bootstrap JS and our custom script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('inviteeSearch');
             const searchResults = document.getElementById('searchResults');
             const inviteeList = document.getElementById('inviteeList');
             const inviteeIdsInput = document.getElementById('inviteeIds');
-            
             let selectedInvitees = [];
-            
-            // Team members data
-            const mockUsers = [
-                { id: 1, email: 'dannerec@mail.uc.edu', name: 'Emma Danner' },
-                { id: 2, email: 'scott2d5@mail.uc.edu', name: 'Dominic Scott' },
-                { id: 3, email: 'wardegnh@mail.uc.edu', name: 'Noah Wardega' },
-                { id: 4, email: 'yeboahcn@mail.uc.edu', name: 'Calvin Yeboah' }
-            ];
-            
-            // Function to display all users
-            function showAllUsers() {
+
+            searchInput.addEventListener('input', async function () {
+                const query = searchInput.value.trim();
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+
+                // Fetch matching users from your backend
+                const response = await fetch(`/users/search?q=${query}`);
+                const users = await response.json();
+
                 searchResults.innerHTML = '';
-                mockUsers.forEach(user => {
-                    // Skip if already selected
-                    if (selectedInvitees.some(invitee => invitee.id === user.id)) {
-                        return;
-                    }
-                    
-                    const item = document.createElement('a');
-                    item.className = 'list-group-item list-group-item-action search-result-item';
-                    item.innerHTML = `<div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>${user.name}</strong><br>
-                            <small class="text-muted">${user.email}</small>
-                        </div>
-                        <button type="button" class="btn btn-add">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>`;
-                    
-                    item.querySelector('button').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addInvitee(user);
-                        searchResults.style.display = 'none';
+                users.forEach(user => {
+                    if (selectedInvitees.find(u => u.id === user.id)) return;
+
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.innerHTML = `<strong>${user.name}</strong><br><small>${user.email}</small>`;
+                    item.onclick = () => {
+                        selectedInvitees.push(user);
+                        updateInviteeList();
                         searchInput.value = '';
-                        showFeedback(`Added ${user.name}`);
-                    });
-                    
+                        searchResults.style.display = 'none';
+                    };
                     searchResults.appendChild(item);
                 });
-                
-                searchResults.style.display = 'block';
-            }
-            
-            // Search function
-            function performSearch() {
-                const query = searchInput.value.toLowerCase();
-                
-                // If empty, show all users
-                if (query.length === 0) {
-                    showAllUsers();
-                    return;
-                }
-                
-                // Filter users based on search query
-                const filteredUsers = mockUsers.filter(user => 
-                    user.email.toLowerCase().includes(query) || 
-                    user.name.toLowerCase().includes(query)
-                );
-                
-                // Display results
-                searchResults.innerHTML = '';
-                if (filteredUsers.length === 0) {
-                    searchResults.innerHTML = '<div class="list-group-item no-results">No team members found</div>';
-                } else {
-                    filteredUsers.forEach(user => {
-                        // Skip if already selected
-                        if (selectedInvitees.some(invitee => invitee.id === user.id)) {
-                            return;
-                        }
-                        
-                        const item = document.createElement('a');
-                        item.className = 'list-group-item list-group-item-action search-result-item';
-                        item.innerHTML = `<div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${user.name}</strong><br>
-                                <small class="text-muted">${user.email}</small>
-                            </div>
-                            <button type="button" class="btn btn-add">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>`;
-                        
-                        item.querySelector('button').addEventListener('click', function(e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            addInvitee(user);
-                            searchResults.style.display = 'none';
-                            searchInput.value = '';
-                            showFeedback(`Added ${user.name}`);
-                        });
-                        
-                        searchResults.appendChild(item);
-                    });
-                }
-                
-                searchResults.style.display = 'block';
-            }
-            
-            // Show feedback message
-            function showFeedback(message) {
-                const feedback = document.createElement('div');
-                feedback.className = 'feedback-message';
-                feedback.textContent = message;
-                document.body.appendChild(feedback);
-                
-                // Trigger animation
-                setTimeout(() => feedback.classList.add('show'), 10);
-                
-                // Remove after animation
-                setTimeout(() => {
-                    feedback.classList.remove('show');
-                    setTimeout(() => feedback.remove(), 300);
-                }, 2000);
-            }
-            
-            // Add invitee to the list
-            function addInvitee(user) {
-                // Check if user is already in the list
-                if (selectedInvitees.some(invitee => invitee.id === user.id)) {
-                    return;
-                }
-                
-                selectedInvitees.push(user);
-                updateInviteeList();
-                updateHiddenInput();
-            }
-            
-            // Remove invitee from the list
-            function removeInvitee(userId) {
-                const user = selectedInvitees.find(invitee => invitee.id === userId);
-                selectedInvitees = selectedInvitees.filter(invitee => invitee.id !== userId);
-                updateInviteeList();
-                updateHiddenInput();
-                if (user) {
-                    showFeedback(`Removed ${user.name}`);
-                }
-            }
-            
-            // Update the invitee list display
-            function updateInviteeList() {
-                if (selectedInvitees.length === 0) {
-                    inviteeList.innerHTML = '<div class="text-center text-muted empty-message">No team members added yet</div>';
-                    return;
-                }
-                
-                inviteeList.innerHTML = '';
-                
-                selectedInvitees.forEach(invitee => {
-                    const inviteeItem = document.createElement('div');
-                    inviteeItem.className = 'invitee-item';
-                    inviteeItem.innerHTML = `
-                        <div class="invitee-info">
-                            <strong>${invitee.name}</strong>
-                            <small class="text-muted">${invitee.email}</small>
-                        </div>
-                        <button type="button" class="btn-remove" data-id="${invitee.id}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
-                    
-                    inviteeItem.querySelector('.btn-remove').addEventListener('click', function() {
-                        removeInvitee(invitee.id);
-                    });
-                    
-                    inviteeList.appendChild(inviteeItem);
-                });
-            }
-            
-            // Update the hidden input with invitee IDs
-            function updateHiddenInput() {
-                inviteeIdsInput.value = selectedInvitees.map(invitee => invitee.id).join(',');
-            }
-            
-            // Event listeners
-            searchInput.addEventListener('focus', showAllUsers);
-            searchInput.addEventListener('keyup', performSearch);
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                    searchResults.style.display = 'none';
-                }
+
+                searchResults.style.display = users.length ? 'block' : 'none';
             });
-            
-            // Initial setup
-            updateInviteeList();
+
+            function updateInviteeList() {
+                inviteeList.innerHTML = '';
+                selectedInvitees.forEach(user => {
+                    const item = document.createElement('div');
+                    item.className = 'invitee-item';
+                    item.innerHTML = `
+                <div class="invitee-info">
+                    <strong>${user.name}</strong><br><small>${user.email}</small>
+                </div>
+                <button class="btn-remove" onclick="removeInvitee(${user.id})">&times;</button>
+            `;
+                    inviteeList.appendChild(item);
+                });
+                inviteeIdsInput.value = selectedInvitees.map(u => u.id).join(',');
+            }
+
+            window.removeInvitee = (id) => {
+                selectedInvitees = selectedInvitees.filter(u => u.id !== id);
+                updateInviteeList();
+            };
         });
     </script>
 </body>

@@ -4,6 +4,7 @@ import com.planit.enterprise.dto.UserDTO;
 import com.planit.enterprise.entity.User;
 import com.planit.enterprise.repository.UserRepository;
 import com.planit.enterprise.service.interfaces.IUserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +65,16 @@ public class UserServiceImpl implements IUserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    public User getCurrentUser(HttpSession session) {
+        Object userObj = session.getAttribute("currentUser");
+        if (userObj instanceof User) {
+            return (User) userObj;
+        }
+        return null;
+    }
+
 
 }
 
