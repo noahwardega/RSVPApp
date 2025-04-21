@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.net.ssl.SSLSession;
+
 @Entity
 @NoArgsConstructor  // Lombok generates the default constructor
 @AllArgsConstructor  // Lombok generates a constructor with all fields
@@ -23,5 +25,21 @@ public class RSVP {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private String rsvpStatus; // "Going", "Maybe", "Not Going"
+    private String status;
+
+    public RSVP(User user, Event event, String status) {
+        this.user = user;
+        this.event = event;
+        this.status = status;
+    }
+
+    public int getUserId() {
+        return user.getId();
+    }
+
+    public int getEventId() {
+        return event.getId();
+    }
+
+
 }

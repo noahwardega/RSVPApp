@@ -1,51 +1,25 @@
 package com.planit.enterprise.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class RSVPDTO {
+    // Getters and setters
     private int id;
     private int userId;
     private int eventId;
-    private String rsvpStatus;
+    private String status;
 
-    // Constructor with parameters
-    public RSVPDTO(int id, int userId, int eventId, String rsvpStatus) {
+    public RSVPDTO(int id, int id1, int id2, String status) {
         this.id = id;
-        this.userId = userId;
-        this.eventId = eventId;
-        this.rsvpStatus = rsvpStatus;
+        this.userId = id1;
+        this.eventId = id2;
+        this.status = status;
     }
 
-    // Getters and setters
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
-    }
-
-    public String getRsvpStatus() {
-        return rsvpStatus;
-    }
-
-    public void setRsvpStatus(String rsvpStatus) {
-        this.rsvpStatus = rsvpStatus;
-    }
 }
 
 

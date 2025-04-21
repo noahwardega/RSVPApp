@@ -5,25 +5,49 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@NoArgsConstructor  // Lombok generates the default constructor
-@AllArgsConstructor  // Lombok generates a constructor with all fields
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "events")
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
-    private String date;
     private String location;
+    private LocalDateTime date;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RSVP> attendees;
+    @ManyToOne
+    @JoinColumn(name = "host_id")
+    private User host;  // The user who created the event
 
-    public Event(int eventId) {
+    @OneToMany(mappedBy = "event")
+    private Set<RSVP> rsvps;
+
+    @ManyToMany
+    @JoinTable(
+            name = "rsvps",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> invitedUsers = new HashSet<>();
+
+    public Event(String name, LocalDateTime date, String location, int hostId) {
+        this.name = name;
+        this.date = date;
+        this.location = location;
+        this.host = new User();
     }
+
+
 }
+

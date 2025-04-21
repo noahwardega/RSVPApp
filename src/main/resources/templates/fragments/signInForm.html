@@ -1,4 +1,4 @@
-<div th:fragment="signInSpot">
+<div th:fragment="signInSpot(userDTO, errorMessage)">
     <div class="signin-container">
         <div class="signin-card">
             <h2 class="signin-title">Welcome to PlanIt</h2>
@@ -7,8 +7,8 @@
             <!-- Error message display -->
             <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-            <form action="#" th:Action="@{/signIn}" th:object="${userDTO}" method="GET" class="signin-form">
-                <div class="form-group">
+            <form th:action="@{/signIn}" th:object="${userDTO}" method="POST" class="signin-form">
+            <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>

@@ -1,54 +1,37 @@
 package com.planit.enterprise.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Setter
+@Getter
 public class EventDTO {
     private int id;
     private String name;
-    private String date;
+    private LocalDateTime date;
     private String location;
+    private int hostId;
+    private List<Integer> attendeeIds;
 
-    // Constructor with parameters
-    public EventDTO(int id, String name, String date, String location) {
+
+    public EventDTO(int id, String name, String location, LocalDateTime date, int id1, List<Integer> attendeeIds) {
         this.id = id;
         this.name = name;
-        this.date = date;
         this.location = location;
+        this.date = date;
+        this.hostId = id1;
+        this.attendeeIds = attendeeIds;
     }
 
-    // No-argument constructor
     public EventDTO() {
+
     }
 
-    // Getters and setters
-    public int getId() {
-        return id;
+    public EventDTO(int id, String name, String location, LocalDateTime date, int id1) {
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 }
 

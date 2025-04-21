@@ -7,43 +7,64 @@ import com.planit.enterprise.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpl implements IUserService {
 
-    private final UserRepository userRepository;
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private UserRepository userRepository;
+
+    @Override
+    public UserDTO getUserByLName(String lName) {
+        User user = userRepository.findBylName(lName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
     }
 
     @Override
-    public UserDTO fetchUserByID(int id) {
-        User user = userRepository.findById(id);
-        if (user != null) {
-            return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
+    public User getUserById(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public int registerUser(String firstName, String lastName, String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email already exists");
         }
-        return null; // Handle the case where the user is not found
+
+        User user = new User();
+        user.setFName(firstName);
+        user.setLName(lastName);
+        user.setEmail(email);
+
+        User savedUser = userRepository.save(user);
+
+        return savedUser.getId();
     }
 
     @Override
-    public UserDTO fetchUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
-            return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
-        }
-        return null; // Return null if no user found
-    }
-
-    @Override
-    public Boolean doesEmailExist(String email) {
+    public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    @Override
-    public int registerUser(String fName, String lName, String email) {
-        User user = new User(fName, lName, email);
-        userRepository.save(user);
-        return user.getId(); // Return the user ID after saving
-    }
 }
+
+

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="main.css">
     <title>PlanIt - Sign In</title>
-    <link rel="icon" href=".\images\planetIcon.svg" type="image/x.icon"> <!--idk why this icon thing won't work-->
+    <link rel="icon" href="images/planetIcon.svg" type="image/svg+xml">
     <style>
         body{
             background-color: midnightblue;
@@ -15,5 +15,5 @@
 <body>
     <div th:replace="fragments/header :: titleheader"></div>
 
-    <div th:replace="fragments/signInForm :: signInSpot"></div>
+    <div th:replace="~{fragments/signInForm :: signInSpot(userDTO=${userDTO}, errorMessage=${errorMessage})}"></div>
 </body>
