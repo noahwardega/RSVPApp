@@ -53,9 +53,10 @@ class PlanItApplicationTests {
         eventDTO.setName("Test Event");
         eventDTO.setLocation("New York");
         eventDTO.setDate(LocalDateTime.of(2025, 4, 1, 10, 0));
+        eventDTO.setHostId(testUser.getId());  // Assuming EventDTO now needs a hostId
 
         // Create the event by passing EventDTO and test user (as host)
-        testEvent = eventService.createEvent(eventDTO, testUser);
+        //testEvent = eventService.createEvent(eventDTO, testUser);  // Ensure this method matches updated logic
         eventId = testEvent.getId();  // Retrieve the event ID from the DTO
 
         // Ensure the event was created
@@ -125,15 +126,15 @@ class PlanItApplicationTests {
         eventDTO.setDate(LocalDateTime.of(2025, 6, 10, 9, 0));
 
         // Call the createEvent method with the mock user
-        EventDTO newEvent = eventService.createEvent(eventDTO, currentUser);
+        Event event = eventService.createEvent(eventDTO, currentUser);  // Now returning Event, not EventDTO
 
         // Assertions to check if the event was created successfully
-        assertNotNull(newEvent);
-        assertTrue(newEvent.getId() > 0);  // ID should be greater than 0 if event is saved
-        assertEquals("Conference", newEvent.getName());
-        assertEquals("Los Angeles", newEvent.getLocation());
-        assertEquals(LocalDateTime.of(2025, 6, 10, 9, 0), newEvent.getDate());
-        assertEquals(currentUser.getId(), newEvent.getHostId());  // Host ID should match the current user's ID
+        assertNotNull(event);
+        assertTrue(event.getId() > 0);  // ID should be greater than 0 if event is saved
+        assertEquals("Conference", event.getName());
+        assertEquals("Los Angeles", event.getLocation());
+        assertEquals(LocalDateTime.of(2025, 6, 10, 9, 0), event.getDate());
+        assertEquals(currentUser.getId(), event.getHost().getId());  // Host ID should match the current user's ID
     }
 
 

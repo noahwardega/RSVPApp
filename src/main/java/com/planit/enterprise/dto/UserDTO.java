@@ -18,8 +18,7 @@ public class UserDTO {
         this.email = email;
     }
 
-    public UserDTO(int id, Object fName, Object lName, String email) {
-    }
+
 
     public UserDTO() {
 

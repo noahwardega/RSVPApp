@@ -44,9 +44,6 @@ public class RSVPServiceImpl implements IRSVPService {
         }
     }
 
-
-
-
     @Override
     public List<RSVPDTO> getRSVPsByEvent(Event event) {
         List<RSVP> rsvps = rsvpRepository.findByEvent(event);

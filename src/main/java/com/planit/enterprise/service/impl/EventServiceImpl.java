@@ -2,8 +2,10 @@ package com.planit.enterprise.service.impl;
 
 import com.planit.enterprise.dto.EventDTO;
 import com.planit.enterprise.entity.Event;
+import com.planit.enterprise.entity.RSVP;
 import com.planit.enterprise.entity.User;
 import com.planit.enterprise.repository.EventRepository;
+import com.planit.enterprise.repository.RSVPRepository;
 import com.planit.enterprise.repository.UserRepository;
 import com.planit.enterprise.service.interfaces.IEventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,35 +26,24 @@ public class EventServiceImpl implements IEventService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RSVPRepository rsvpRepository;
+
     @Override
     public List<Event> getEventsByHost(User host) {
         return eventRepository.findByHost(host);
     }
 
-    public EventDTO createEvent(EventDTO eventDTO, User host) {
-        // Create a new event
+    public Event createEvent(EventDTO eventDTO, User host) {
         Event event = new Event();
         event.setName(eventDTO.getName());
         event.setLocation(eventDTO.getLocation());
         event.setDate(eventDTO.getDate());
-        event.setHost(host); // Set the current user as the host
+        event.setHost(host);
 
-        // Save the event
         eventRepository.save(event);
 
-        // Convert the event to DTO
-        List<Integer> attendeeIds = event.getInvitedUsers().stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-
-        return new EventDTO(
-                event.getId(),
-                event.getName(),
-                event.getLocation(),
-                event.getDate(),
-                host.getId(),
-                attendeeIds
-        );
+        return event;
     }
 
 
@@ -72,10 +63,14 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public EventDTO saveEvent(EventDTO eventDTO) {
-        Event event = dtoToEvent(eventDTO);
-        Event savedEvent = eventRepository.save(event);
-        return eventToDTO(savedEvent);
+    public Event saveEvent(Event event) {
+        return eventRepository.save(event);
+    }
+
+    @Override
+    public void deleteEvent(int eventId) {
+        eventRepository.deleteById(eventId);
+
     }
 
     private EventDTO eventToDTO(Event event) {

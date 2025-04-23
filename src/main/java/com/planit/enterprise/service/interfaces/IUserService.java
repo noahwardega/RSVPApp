@@ -18,5 +18,7 @@ public interface IUserService {
     boolean existsByEmail(String email);
 
     User getCurrentUser(HttpSession session);
+    List<UserDTO> searchUsersByEmail(String email);
+
 
 }

@@ -14,6 +14,8 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByHost(User host);
     List<Event> findByInvitedUsersContaining(User user);
+    void deleteById(int id);  // Deletes the event by its ID
+
 
 
 }

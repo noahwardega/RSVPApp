@@ -5,6 +5,8 @@ import com.planit.enterprise.dto.RSVPDTO;
 import com.planit.enterprise.entity.Event;
 import com.planit.enterprise.entity.RSVP;
 import com.planit.enterprise.entity.User;
+import com.planit.enterprise.repository.RSVPRepository;
+import com.planit.enterprise.repository.UserRepository;
 import com.planit.enterprise.service.interfaces.IEventService;
 import com.planit.enterprise.service.interfaces.IRSVPService;
 import com.planit.enterprise.service.interfaces.IUserService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,12 @@ public class EventController {
     private IUserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RSVPRepository rsvpRepository;
+
+    @Autowired
     private HttpSession session;
 
     @GetMapping("/start")
@@ -39,15 +48,12 @@ public class EventController {
         User currentUser = userService.getCurrentUser(session);
 
         if (currentUser != null) {
-            // Fetch events the user is hosting
             List<Event> userEvents = eventService.getEventsByHost(currentUser);
 
-            // Fetch RSVPs for events the user is invited to
             List<RSVPDTO> invitedRSVPs = rsvpService.getRSVPsByUser(currentUser);
 
-            // Fetch the actual events based on RSVP event IDs
             List<Event> invitedEvents = invitedRSVPs.stream()
-                    .map(rsvp -> eventService.getEventById(rsvp.getEventId())) // Assuming this method exists
+                    .map(rsvp -> eventService.getEventById(rsvp.getEventId()))
                     .collect(Collectors.toList());
 
             model.addAttribute("currentUser", currentUser);
@@ -64,27 +70,54 @@ public class EventController {
 
     @GetMapping("/createEvent")
     public String showCreateEventForm(Model model) {
+        User currentUser = userService.getCurrentUser(session);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
 
         model.addAttribute("eventDTO", new EventDTO());
+
+        List<User> users = userRepository.findAll();
+        users.removeIf(user -> user.getId() == currentUser.getId());
+
+        model.addAttribute("allUsers", users);
         return "createEvent";
     }
 
-    @PostMapping("/create")
-    public String createEvent(@ModelAttribute EventDTO eventDTO) {
-        User currentUser = (User) session.getAttribute("currentUser");
+    @PostMapping("/createEvent")
+    public String createEvent(@ModelAttribute EventDTO eventDTO, @RequestParam List<Integer> attendeeIds) {
 
-
-        if (currentUser != null) {
-
-            eventService.createEvent(eventDTO, currentUser);
-            return "redirect:/start";
+        User currentUser = userService.getCurrentUser(session);
+        if (currentUser == null) {
+            return "redirect:/login";
         }
 
-        return "redirect:/signIn";
+        Event event = new Event();
+        event.setName(eventDTO.getName());
+        event.setDate(eventDTO.getDate());
+        event.setLocation(eventDTO.getLocation());
+        event.setHost(currentUser);
+
+        Event savedEvent = eventService.saveEvent(event);
+
+        for (Integer userId : attendeeIds) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found: ID " + userId));
+
+            String status = "Unknown";
+            RSVP rsvp = new RSVP(user, savedEvent, status);
+            rsvpRepository.save(rsvp);
+        }
+
+        return "redirect:/start";
     }
 
 
-
+    @PostMapping("/deleteEvent/{id}")
+    public String deleteEvent(@PathVariable("id") int eventId) {
+        eventService.deleteEvent(eventId);
+        return "redirect:/start";
+    }
 
 }
 

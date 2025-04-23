@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -41,11 +42,17 @@ public class Event {
     )
     private Set<User> invitedUsers = new HashSet<>();
 
-    public Event(String name, LocalDateTime date, String location, int hostId) {
+    public Event(String name, LocalDateTime date, String location, User host) {
         this.name = name;
         this.date = date;
         this.location = location;
-        this.host = new User();
+        this.host = host;
+    }
+
+    public List<Integer> getInviteeIds() {
+        return invitedUsers.stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
     }
 
 

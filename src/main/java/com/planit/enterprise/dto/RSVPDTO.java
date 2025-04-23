@@ -43,12 +43,12 @@ public class RSVPDTO {
 
     // Get status as a String for display purposes
     public String getRsvpStatusAsString() {
-        switch (this.rsvpStatus) {
-            case 1: return "Yes";
-            case 0: return "No";
-            case 2: return "Maybe";
-            default: return "Unknown";
-        }
+        return switch (this.rsvpStatus) {
+            case 1 -> "Yes";
+            case 0 -> "No";
+            case 2 -> "Maybe";
+            default -> "Unknown";
+        };
     }
 }
 

@@ -38,7 +38,7 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public List<UserDTO>getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map(user -> new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail()))
@@ -74,6 +74,19 @@ public class UserServiceImpl implements IUserService {
         }
         return null;
     }
+
+    @Override
+    public List<UserDTO> searchUsersByEmail(String email) {
+        List<User> users = userRepository.findByEmailContainingIgnoreCase(email);
+        return users.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private UserDTO convertToDTO(User user) {
+        return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
+    }
+
 
 
 }

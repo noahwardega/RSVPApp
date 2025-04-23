@@ -1,9 +1,7 @@
 package com.planit.enterprise;
 
-import com.fasterxml.jackson.databind.DatabindContext;
 import com.planit.enterprise.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import com.planit.enterprise.dto.UserDTO;
 import com.planit.enterprise.entity.User;
@@ -12,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -22,6 +18,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private HttpSession session;
@@ -70,6 +69,20 @@ public class UserController {
         return "redirect:/start";
     }
 
+    @GetMapping("/search")
+    @ResponseBody
+    public List<UserDTO> searchUsers(@RequestParam("q") String query) {
+        List<UserDTO> users = userService.searchUsersByEmail(query);
+        if (users.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return users;
+    }
 
+    @GetMapping("/users/all")
+    @ResponseBody
+    public List<UserDTO> getAllUsers() {
+        return userService.getAllUsers();
+    }
 
 }

@@ -92,7 +92,7 @@ public class RSVPController {
 
         Event event = eventService.getEventById(eventId);
         if (event == null) {
-            return "redirect:/error"; // or some error page if event is missing
+            return "redirect:/error";
         }
 
         rsvpService.createOrUpdateRSVP(currentUser, event, status);

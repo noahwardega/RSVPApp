@@ -9,9 +9,11 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findBylName(String lName); // Updated to match entity field name
+    Optional<User> findBylName(String lName);
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+    List<User> findByEmailContainingIgnoreCase(String email);
+
 
 
 }

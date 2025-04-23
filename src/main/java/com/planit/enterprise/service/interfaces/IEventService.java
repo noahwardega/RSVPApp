@@ -9,12 +9,15 @@ import com.planit.enterprise.entity.Event;
 import com.planit.enterprise.entity.User;
 
 public interface IEventService {
-    EventDTO createEvent(EventDTO eventDTO, User host);
+    Event createEvent(EventDTO eventDTO, User host);
     List<EventDTO> getEventsByUser(User user);
     Event getEventById(int id);
     List<Event> getEventsInvitedTo(User user);
     List<Event> getEventsByHost(User host);
 
-    EventDTO saveEvent(EventDTO eventDTO);
+    Event saveEvent(Event event);
+
+    void deleteEvent(int eventId);
+
 }
 
