@@ -1,20 +1,75 @@
 <div th:fragment="navbar">
-    <nav>
-        <form action="#" th:action="@{/createEvent}" method="GET">
-            <button style="
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 20%;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 20px;
-            padding-right: 20px;
-            background-color: darkslateblue;
-            border-radius: 10px;
-            font-size: 1.2em;
-            line-height: 3.0;
-            color: white;" type="submit">Create Event</button>
-        </form>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="/start" class="nav-link active">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a th:href="@{/createEvent}" class="nav-link">
+                    <i class="fas fa-calendar-plus"></i> Create Event
+                </a>
+            </div>
+        </div>
     </nav>
+    
+    <style>
+        .main-nav {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link i {
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            
+            .nav-link {
+                flex: 1 1 40%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
 </div>

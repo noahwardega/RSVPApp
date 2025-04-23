@@ -1,33 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="main.css">
     <title>PlanIt - Home</title>
-    <link rel="icon" href=".\images\planetIcon.svg" type="image/x.icon"> <!--idk why this icon thing won't work-->
-    <style>
-        body{
-            background-color: midnightblue;
-            color: white;
-        }
-
-        .overarchingHeader{
-            color: white;
-            font-size: 2.0em;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="fragments/header :: titleheader"></div>
+<div th:replace="fragments/header :: titleheader"></div>
+<div th:replace="fragments/topnav :: navbar"></div>
 
-    <div th:replace="fragments/topnav :: navbar"></div>
+<div class="container mt-4">
 
-    <!--<p th:text="${eventDTO}"/>-->
+    <div class="welcome-banner">
+        <h2>Hey <span th:text="${user.FName}">User</span>!</h2>
+        <p>Here's what's on your schedule.</p>
+    </div>
 
-    <h3 class="overarchingHeader">Upcoming Events</h3>
-    <!--plan is to have events show up each in their own little boxes as div elements, will be probably 2 across in widest
-    view and will stack when screen is smaller-->
+    <section>
+        <h3>Your Events</h3>
+        <div th:if="${yourEvents.empty}">
+            <p>You haven't created any events yet.</p>
+        </div>
+        <div class="row" th:each="event : ${yourEvents}">
+            <div class="card col-md-4 m-2">
+                <div class="card-body">
+                    <h5 th:text="${event.name}">Event Name</h5>
+                    <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
+                    <p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
+                    <a th:href="@{'/rsvps/viewEvent/' + ${event.id}}" class="btn btn-primary">View</a>
+                    <form th:action="@{'/deleteEvent/' + ${event.id}}" method="post" class="d-inline">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <a href="/createEvent" class="btn btn-success mt-3">+ Create New Event</a>
+    </section>
 
+    <section class="mt-5">
+        <h3>Upcoming Events You're Invited To</h3>
+        <div th:if="${invitedEvents == null}">
+            <p>No Invited Events Yet</p>
+        </div>
+        <div class="row">
+            <div class="card col-md-4 m-2"
+                 th:each="event : ${invitedEvents}"
+                 th:if="${event.host.getId() != currentUser.id}">
+                <div class="card-body">
+                    <h5 th:text="${event.name}">Event Name</h5>
+                    <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
+                    <p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
+                    <a th:href="@{'/rsvps/viewEvent/' + ${event.id}}" class="btn btn-outline-primary">View</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

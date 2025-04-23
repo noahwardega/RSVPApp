@@ -1,35 +1,28 @@
 package com.planit.enterprise.service.interfaces;
 
 import com.planit.enterprise.dto.UserDTO;
+import com.planit.enterprise.entity.User;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
-    /**
-     * Fetch single object of class UserDTO given ID.
-     * @param id unique identifier for user.
-     * @return the matching user, or null if no matches found.
-     */
-    UserDTO fetchUserByID(int id);
 
-    /**
-     * Fetch single object of class UserDTO given email.
-     * @param email unique identifier for user.
-     * @return the matching user, or null if no matches found.
-     */
-    UserDTO fetchUserByEmail(String email);
+    User getUserById(int id);
 
-    /**
-     * Returns result of checking for user with given email.
-     * @param email email to search for in data.
-     * @return true if user found, false if no match.
-     */
-    Boolean doesEmailExist(String email);
+    Optional<User> getUserByEmail(String email);
 
-    /**
-     * Adds additional user to database
-     * @param fname new user's first name
-     * @param lname new user's last name
-     * @param email new user's email address
-     * @return created user's ID upon successful creation, -1 otherwise
-     */
-    int registerUser(String fname, String lname, String email);
+    List<UserDTO> getAllUsers();
+
+    int registerUser(String test, String test1, String email);
+
+    boolean existsByEmail(String email);
+
+    User getCurrentUser(HttpSession session);
+
+    List<UserDTO> searchUsersByEmail(String email);
+
+    String getFullNameById(int id);
+
 }
