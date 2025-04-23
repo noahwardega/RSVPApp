@@ -2,9 +2,7 @@ package com.planit.enterprise;
 
 import com.planit.enterprise.dto.EventDTO;
 import com.planit.enterprise.dto.RSVPDTO;
-import com.planit.enterprise.dto.UserDTO;
 import com.planit.enterprise.entity.Event;
-import com.planit.enterprise.entity.RSVP;
 import com.planit.enterprise.entity.User;
 import com.planit.enterprise.service.interfaces.IEventService;
 import com.planit.enterprise.service.interfaces.IRSVPService;
@@ -35,32 +33,27 @@ class PlanItApplicationTests {
     private IRSVPService rsvpService;
 
     private User testUser;
-    private EventDTO testEvent;
+    private Event testEvent;
     private int userId;
     private int eventId;
 
     @BeforeEach
     void setup() {
-        // Create and save a test user
         userId = userService.registerUser("Test", "Test", "Test@email.com");
         testUser = userService.getUserById(userId);
-
-        // Ensure the user is saved correctly
         assertNotNull(testUser);
 
-        // Create an EventDTO object with test event data
         EventDTO eventDTO = new EventDTO();
         eventDTO.setName("Test Event");
         eventDTO.setLocation("New York");
         eventDTO.setDate(LocalDateTime.of(2025, 4, 1, 10, 0));
-        eventDTO.setHostId(testUser.getId());  // Assuming EventDTO now needs a hostId
+        eventDTO.setHostId(testUser.getId());
 
-        // Create the event by passing EventDTO and test user (as host)
-        //testEvent = eventService.createEvent(eventDTO, testUser);  // Ensure this method matches updated logic
-        eventId = testEvent.getId();  // Retrieve the event ID from the DTO
-
-        // Ensure the event was created
+        testEvent = eventService.createEvent(eventDTO, testUser);
         assertNotNull(testEvent);
+        assertTrue(testEvent.getId() > 0);
+
+        eventId = testEvent.getId();
     }
 
 
@@ -112,95 +105,76 @@ class PlanItApplicationTests {
 
     @Test
     void createEvent_createsNewEventSuccessfully() {
-        // Create a mock user (this would normally be a user from the database)
         User currentUser = new User();
-        currentUser.setId(1);  // Set an ID for the mock user
+        currentUser.setId(1);
         currentUser.setFName("John");
         currentUser.setLName("Doe");
         currentUser.setEmail("john.doe@example.com");
 
-        // Create EventDTO object
         EventDTO eventDTO = new EventDTO();
         eventDTO.setName("Conference");
         eventDTO.setLocation("Los Angeles");
         eventDTO.setDate(LocalDateTime.of(2025, 6, 10, 9, 0));
 
-        // Call the createEvent method with the mock user
-        Event event = eventService.createEvent(eventDTO, currentUser);  // Now returning Event, not EventDTO
+        Event event = eventService.createEvent(eventDTO, currentUser);
 
-        // Assertions to check if the event was created successfully
         assertNotNull(event);
-        assertTrue(event.getId() > 0);  // ID should be greater than 0 if event is saved
+        assertTrue(event.getId() > 0);
         assertEquals("Conference", event.getName());
         assertEquals("Los Angeles", event.getLocation());
         assertEquals(LocalDateTime.of(2025, 6, 10, 9, 0), event.getDate());
-        assertEquals(currentUser.getId(), event.getHost().getId());  // Host ID should match the current user's ID
+        assertEquals(currentUser.getId(), event.getHost().getId());
     }
 
 
     @Test
     void fetchAllByUserID_returnsRSVPs() {
-        // Fetch the User and Event entities (use entities here)
-        User user = userService.getUserById(userId);  // Use User entity
-        Event event = eventService.getEventById(eventId);  // Use Event entity
+        User user = userService.getUserById(userId);
+        Event event = eventService.getEventById(eventId);
 
-        // Create or update RSVP (works with entities)
         rsvpService.createOrUpdateRSVP(user, event, "Yes");
 
-        // Fetch RSVPs by User (service returns DTOs, not entities)
         List<RSVPDTO> rsvps = rsvpService.getRSVPsByUser(user);
         assertFalse(rsvps.isEmpty());
-        assertEquals(eventId, rsvps.get(0).getEventId()); // Verify Event ID in the RSVPDTO
-        assertEquals(userId, rsvps.get(0).getUserId()); // Verify User ID in the RSVPDTO
+        assertEquals(eventId, rsvps.get(0).getEventId());
+        assertEquals(userId, rsvps.get(0).getUserId());
 
-        // Check the integer status directly
-        assertEquals(1, rsvps.get(0).getRsvpStatus());  // Assert status as integer (1 for "Yes")
+        assertEquals(1, rsvps.get(0).getRsvpStatus());
 
-        // Alternatively, check the status as a string
-        assertEquals("Yes", rsvps.get(0).getRsvpStatusAsString());  // Assert status as String
+        assertEquals("Yes", rsvps.get(0).getRsvpStatusAsString());
     }
 
     @Test
     void fetchAllByEventID_returnsRSVPs() {
-        // Fetch the User and Event entities (use entities here)
-        User user = userService.getUserById(userId);  // Use User entity
-        Event event = eventService.getEventById(eventId);  // Use Event entity
+        User user = userService.getUserById(userId);
+        Event event = eventService.getEventById(eventId);
 
-        // Create or update RSVP (works with entities)
         rsvpService.createOrUpdateRSVP(user, event, "Yes");
 
-        // Fetch RSVPs by Event (service returns DTOs, not entities)
         List<RSVPDTO> rsvps = rsvpService.getRSVPsByEvent(event);
         assertFalse(rsvps.isEmpty());
-        assertEquals(userId, rsvps.get(0).getUserId()); // Verify User ID in the RSVPDTO
-        assertEquals(eventId, rsvps.get(0).getEventId()); // Verify Event ID in the RSVPDTO
+        assertEquals(userId, rsvps.get(0).getUserId());
+        assertEquals(eventId, rsvps.get(0).getEventId());
 
-        // Check the integer status directly
-        assertEquals(1, rsvps.get(0).getRsvpStatus());  // Assert status as integer (1 for "Yes")
+        assertEquals(1, rsvps.get(0).getRsvpStatus());
 
-        // Alternatively, check the status as a string
-        assertEquals("Yes", rsvps.get(0).getRsvpStatusAsString());  // Assert status as String
+        assertEquals("Yes", rsvps.get(0).getRsvpStatusAsString());
     }
 
 
     @Test
     void createRSVP_createsNewRSVP() {
-        // Fetch the User and Event entities (use entities here)
-        User user = userService.getUserById(userId);  // Use User entity
-        Event event = eventService.getEventById(eventId);  // Use Event entity
+        User user = userService.getUserById(userId);
+        Event event = eventService.getEventById(eventId);
 
-        // Create or update RSVP (works with entities)
         rsvpService.createOrUpdateRSVP(user, event, "Yes");
 
-        // Fetch RSVPs by User (service returns DTOs, not entities)
         List<RSVPDTO> rsvps = rsvpService.getRSVPsByUser(user);
-        assertEquals(1, rsvps.size()); // Ensure one RSVP is created
+        assertEquals(1, rsvps.size());
 
-        // Check the integer status directly
-        assertEquals(1, rsvps.get(0).getRsvpStatus());  // Assert status as integer (1 for "Yes")
+        assertEquals(1, rsvps.get(0).getRsvpStatus());
 
-        // Alternatively, check the status as a string
-        assertEquals("Yes", rsvps.get(0).getRsvpStatusAsString());  // Assert status as String
+        assertEquals("Yes", rsvps.get(0).getRsvpStatusAsString());
     }
 }
 
