@@ -28,7 +28,7 @@
                     <h5 th:text="${event.name}">Event Name</h5>
                     <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
                     <p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
-                    <a th:href="@{'/event/' + ${event.id}}" class="btn btn-primary">View</a>
+                    <a th:href="@{'/rsvps/viewEvent/' + ${event.id}}" class="btn btn-primary">View</a>
                     <form th:action="@{'/deleteEvent/' + ${event.id}}" method="post" class="d-inline">
                         <button class="btn btn-danger">Delete</button>
                     </form>
@@ -40,16 +40,18 @@
 
     <section class="mt-5">
         <h3>Upcoming Events You're Invited To</h3>
-        <div th:if="${invitedEvents.empty}">
-            <p>No upcoming invites. Time to plan something!</p>
+        <div th:if="${invitedEvents == null}">
+            <p>No Invited Events Yet</p>
         </div>
-        <div class="row" th:each="event : ${invitedEvents}">
-            <div class="card col-md-4 m-2">
+        <div class="row">
+            <div class="card col-md-4 m-2"
+                 th:each="event : ${invitedEvents}"
+                 th:if="${event.host.getId() != currentUser.id}">
                 <div class="card-body">
                     <h5 th:text="${event.name}">Event Name</h5>
                     <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
                     <p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
-                    <a th:href="@{'/event/' + ${event.id}}" class="btn btn-outline-primary">View</a>
+                    <a th:href="@{'/rsvps/viewEvent/' + ${event.id}}" class="btn btn-outline-primary">View</a>
                 </div>
             </div>
         </div>

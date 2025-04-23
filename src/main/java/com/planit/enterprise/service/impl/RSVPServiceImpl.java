@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,20 +29,21 @@ public class RSVPServiceImpl implements IRSVPService {
 
     @Override
     public void createOrUpdateRSVP(User user, Event event, String status) {
-        RSVP existingRSVP = rsvpRepository.findByUserAndEvent(user, event)
-                .orElse(null);
+        Optional<RSVP> optionalRSVP = rsvpRepository.findByUserAndEvent(user, event);
 
-        if (existingRSVP == null) {
+        if (optionalRSVP.isPresent()) {
+            RSVP existingRSVP = optionalRSVP.get();
+            existingRSVP.setStatus(status);
+            rsvpRepository.save(existingRSVP);
+        } else {
             RSVP newRSVP = new RSVP();
             newRSVP.setUser(user);
             newRSVP.setEvent(event);
             newRSVP.setStatus(status);
             rsvpRepository.save(newRSVP);
-        } else {
-            existingRSVP.setStatus(status);
-            rsvpRepository.save(existingRSVP);
         }
     }
+
 
 
 

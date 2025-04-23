@@ -308,18 +308,29 @@
 
             function updateInviteeList() {
                 inviteeList.innerHTML = '';
+                inviteeIdsInput.value = selectedInvitees.map(user => user.id).join(',');
+
                 selectedInvitees.forEach(user => {
                     const item = document.createElement('div');
                     item.className = 'invitee-item';
                     item.innerHTML = `
-                <div class="invitee-info">
-                    <strong>${user.name}</strong><br><small>${user.email}</small>
-                </div>
-                <button class="btn-remove" onclick="removeInvitee(${user.id})">&times;</button>
-            `;
+            <div class="invitee-info">
+                <strong>${user.name}</strong>
+                <small>${user.email}</small>
+            </div>
+            <button class="btn-remove" title="Remove">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+                    // Remove button functionality
+                    item.querySelector('.btn-remove').addEventListener('click', () => {
+                        selectedInvitees = selectedInvitees.filter(u => u.id !== user.id);
+                        updateInviteeList();
+                    });
+
                     inviteeList.appendChild(item);
                 });
-                inviteeIdsInput.value = selectedInvitees.map(u => u.id).join(',');
             }
 
             window.removeInvitee = (id) => {

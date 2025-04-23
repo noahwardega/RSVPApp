@@ -50,6 +50,8 @@ public class EventController {
                     .map(rsvp -> eventService.getEventById(rsvp.getEventId())) // Assuming this method exists
                     .collect(Collectors.toList());
 
+            model.addAttribute("currentUser", currentUser);
+
             model.addAttribute("yourEvents", userEvents);
             model.addAttribute("invitedEvents", invitedEvents);
             model.addAttribute("user", currentUser);
@@ -60,8 +62,9 @@ public class EventController {
         return "start";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/createEvent")
     public String showCreateEventForm(Model model) {
+
         model.addAttribute("eventDTO", new EventDTO());
         return "createEvent";
     }
@@ -69,6 +72,7 @@ public class EventController {
     @PostMapping("/create")
     public String createEvent(@ModelAttribute EventDTO eventDTO) {
         User currentUser = (User) session.getAttribute("currentUser");
+
 
         if (currentUser != null) {
 

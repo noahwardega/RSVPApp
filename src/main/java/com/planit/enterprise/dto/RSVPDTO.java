@@ -19,6 +19,10 @@ public class RSVPDTO {
         this.setRsvpStatus(status);  // Convert string status to integer
     }
 
+    public RSVPDTO() {
+
+    }
+
     // Set status and convert to integer
     public void setRsvpStatus(String status) {
         switch (status.toLowerCase()) {
