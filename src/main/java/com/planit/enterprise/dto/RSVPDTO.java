@@ -16,7 +16,7 @@ public class RSVPDTO {
         this.id = id;
         this.userId = userId;
         this.eventId = eventId;
-        this.setRsvpStatus(status);  // Convert string status to integer
+        this.setRsvpStatus(status);
     }
 
     public RSVPDTO() {
@@ -47,9 +47,10 @@ public class RSVPDTO {
             case 1 -> "Yes";
             case 0 -> "No";
             case 2 -> "Maybe";
-            default -> "Unknown";
+            default -> "Pending";
         };
     }
+
 }
 
 

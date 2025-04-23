@@ -83,6 +83,21 @@ public class UserServiceImpl implements IUserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String getFullNameById(int id) {
+        // Fetch the user by their ID
+        User user = userRepository.findById(id).orElse(null); // Assuming you're using Optional to handle nulls
+
+        // Check if the user exists
+        if (user != null) {
+            // Return the concatenated first and last name
+            return user.getFName() + " " + user.getLName();
+        } else {
+            // Return an empty string or handle the null case however you prefer
+            return "Unknown User";
+        }
+    }
+
     private UserDTO convertToDTO(User user) {
         return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
     }

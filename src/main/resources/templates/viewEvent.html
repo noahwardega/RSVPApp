@@ -28,9 +28,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="rsvp : ${rsvps.values()}">
-            <td th:text="${userFullNames[rsvp.userId]}">John Doe</td>
-            <td th:text="${rsvp.rsvpStatus}">Yes</td>
+        <tr th:each="rsvp : ${rsvps}">
+            <td th:text="${fullNameMap[rsvp.userId]}">Full Name</td>
+            <td th:text="${statusMap[rsvp.userId]}">Status</td>
         </tr>
         </tbody>
     </table>

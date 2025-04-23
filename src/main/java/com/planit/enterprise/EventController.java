@@ -104,7 +104,7 @@ public class EventController {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found: ID " + userId));
 
-            String status = "Unknown";
+            String status = "Pending";
             RSVP rsvp = new RSVP(user, savedEvent, status);
             rsvpRepository.save(rsvp);
         }

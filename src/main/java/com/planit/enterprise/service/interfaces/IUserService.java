@@ -20,5 +20,6 @@ public interface IUserService {
     User getCurrentUser(HttpSession session);
     List<UserDTO> searchUsersByEmail(String email);
 
+    String getFullNameById(int id);
 
 }

@@ -49,28 +49,30 @@ public class RSVPController {
                 model.addAttribute("event", optionalEvent.get());
 
                 List<RSVPDTO> rsvps = rsvpService.getRSVPsByEvent(optionalEvent.get());
-                Map<Integer, UserDTO> userMap = new HashMap<>();
-                Map<Integer, RSVPDTO> rsvpMap = new HashMap<>();
-                Map<Integer, String> userFullNames = new HashMap<>();
+                Map<Integer, String> statusMap = new HashMap<>();
+                Map<Integer, String> userFullNamesMap = new HashMap<>();
 
+                // Populate userMap and userFullNames
                 for (RSVPDTO rsvp : rsvps) {
-                    User user = userService.getUserById(rsvp.getUserId());
-                    userMap.put(user.getId(), new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail()));
-                    userFullNames.put(user.getId(), user.getFName() + " " + user.getLName());
-                    rsvpMap.put(rsvp.getId(), new RSVPDTO(rsvp.getId(), rsvp.getEventId(), rsvp.getUserId(), rsvp.getRsvpStatusAsString()));
+                    int userId = rsvp.getUserId();
+                    String fullName = userService.getFullNameById(userId);
+                    String status = rsvp.getRsvpStatusAsString();
+
+                    userFullNamesMap.put(userId, fullName);
+                    statusMap.put(userId, status);
+
                 }
+                model.addAttribute("rsvps", rsvps);
+
 
                 String hostFName = event.getHost().getFName();
                 String hostLName = event.getHost().getLName();
 
-                model.addAttribute("userFullNames", userFullNames);
-
                 model.addAttribute("hostFName", hostFName);
                 model.addAttribute("hostLName", hostLName);
 
-                model.addAttribute("rsvps", rsvpMap);
-                model.addAttribute("userMap", userMap);
-
+                model.addAttribute("fullNameMap", userFullNamesMap);
+                model.addAttribute("statusMap", statusMap);
                 model.addAttribute("currentUser", currentUser);
             }
         } else {
