@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IUserService {
-    UserDTO getUserByLName(String lName);
+
     User getUserById(int id);
+
     Optional<User> getUserByEmail(String email);
+
     List<UserDTO> getAllUsers();
 
     int registerUser(String test, String test1, String email);
@@ -18,6 +20,7 @@ public interface IUserService {
     boolean existsByEmail(String email);
 
     User getCurrentUser(HttpSession session);
+
     List<UserDTO> searchUsersByEmail(String email);
 
     String getFullNameById(int id);

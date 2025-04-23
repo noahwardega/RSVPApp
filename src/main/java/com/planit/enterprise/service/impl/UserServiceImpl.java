@@ -19,13 +19,6 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public UserDTO getUserByLName(String lName) {
-        User user = userRepository.findBylName(lName)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
-    }
-
-    @Override
     public User getUserById(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -85,15 +78,11 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public String getFullNameById(int id) {
-        // Fetch the user by their ID
-        User user = userRepository.findById(id).orElse(null); // Assuming you're using Optional to handle nulls
+        User user = userRepository.findById(id).orElse(null);
 
-        // Check if the user exists
         if (user != null) {
-            // Return the concatenated first and last name
             return user.getFName() + " " + user.getLName();
         } else {
-            // Return an empty string or handle the null case however you prefer
             return "Unknown User";
         }
     }
@@ -101,9 +90,6 @@ public class UserServiceImpl implements IUserService {
     private UserDTO convertToDTO(User user) {
         return new UserDTO(user.getId(), user.getFName(), user.getLName(), user.getEmail());
     }
-
-
-
 }
 
 

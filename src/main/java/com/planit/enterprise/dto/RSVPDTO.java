@@ -11,7 +11,6 @@ public class RSVPDTO {
     private int eventId;
     private int rsvpStatus;
 
-    // Constructor
     public RSVPDTO(int id, int userId, int eventId, String status) {
         this.id = id;
         this.userId = userId;
@@ -23,7 +22,6 @@ public class RSVPDTO {
 
     }
 
-    // Set status and convert to integer
     public void setRsvpStatus(String status) {
         switch (status.toLowerCase()) {
             case "yes":

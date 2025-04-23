@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.net.ssl.SSLSession;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

@@ -9,18 +9,13 @@ import com.planit.enterprise.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
 
     @Autowired
     private IUserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private HttpSession session;

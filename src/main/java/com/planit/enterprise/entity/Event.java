@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +26,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "host_id")
-    private User host;  // The user who created the event
+    private User host;
 
     @OneToMany(mappedBy = "event")
     private Set<RSVP> rsvps;
