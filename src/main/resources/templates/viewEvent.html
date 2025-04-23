@@ -240,7 +240,7 @@
     <hr>
 
     <h4 class="formTitle">Who's Going?</h4>
-    <table class="fieldTitle">
+    <table class="table">
         <thead>
         <tr>
             <th>Name</th>
@@ -250,7 +250,7 @@
         <tbody>
         <tr th:each="rsvp : ${rsvps}">
             <td th:text="${fullNameMap[rsvp.userId]}">Full Name</td>
-            <td th:text="${statusMap[rsvp.userId]}">Status</td>
+            <td th:text="${statusMap[rsvp.userId]}" style="color: darkblue">Status</td>
         </tr>
         </tbody>
     </table>

@@ -208,7 +208,7 @@
         <div th:if="${yourEvents.empty}">
             <p>You haven't created any events yet.</p>
         </div>
-        <div class="row" th:each="event : ${yourEvents}">
+        <div class="row" style="color: black;" th:each="event : ${yourEvents}">
             <div class="card col-md-4 m-2">
                 <div class="card-body">
                     <h5 th:text="${event.name}">Event Name</h5>
@@ -229,7 +229,7 @@
         <div th:if="${invitedEvents == null}">
             <p>No Invited Events Yet</p>
         </div>
-        <div class="row">
+        <div class="row" style="color: black;">
             <div class="card col-md-4 m-2"
                  th:each="event : ${invitedEvents}"
                  th:if="${event.host.getId() != currentUser.id}">
