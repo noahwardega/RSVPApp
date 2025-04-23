@@ -248,9 +248,9 @@
             </label>
 
             <!-- Invitees -->
-            <div class="mb-3">
-                <label class="form-label">Invite Attendees</label>
-                <div class="form-check" th:each="user : ${allUsers}">
+            <div class="invitee-section">
+                <label class="fieldTitle">Invite Attendees</label>
+                <div class="input-group mb-3" th:each="user : ${allUsers}">
                     <input class="form-check-input" type="checkbox"
                            name="attendeeIds" th:value="${user.id}" th:id="'user_' + ${user.id}">
                     <label class="form-check-label" th:for="'user_' + ${user.id}"
