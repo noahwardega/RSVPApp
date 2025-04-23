@@ -209,8 +209,8 @@
             <p>You haven't created any events yet.</p>
         </div>
         <div class="row" style="color: black;">
-            <div class="card col-md-4 m-2">
-                <div class="card-body" th:each="event : ${yourEvents}">
+            <div class="card col-md-4 m-2" th:each="event : ${yourEvents}">
+                <div class="card-body">
                     <h5 th:text="${event.name}">Event Name</h5>
                     <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
                     <p><strong>Location:</strong> <span th:text="${event.location}"></span></p>
