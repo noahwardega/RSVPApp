@@ -11,6 +11,9 @@ public class RSVPDTO {
     private int eventId;
     private int rsvpStatus;
 
+    //CODE REVIEW: I added in Stevens suggestion of deleting redundant getters and setters because lombok already made them -Noah Wardega
+
+
     public RSVPDTO(int id, int userId, int eventId, String status) {
         this.id = id;
         this.userId = userId;

@@ -11,6 +11,9 @@ public class UserDTO {
     private String lName;
     private String email;
 
+    //CODE REVIEW: I added in Stevens suggestion of deleting redundant getters and setters because lombok already made them -Noah Wardega
+
+
     public UserDTO(int id, String fName, String lName, String email) {
         this.id = id;
         this.fName = fName;

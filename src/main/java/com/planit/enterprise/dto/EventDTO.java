@@ -16,6 +16,8 @@ public class EventDTO {
     private int hostId;
     private List<Integer> attendeeIds;
 
+    //CODE REVIEW: I added in Stevens suggestion of deleting redundant getters and setters because lombok already made them -Noah Wardega
+
 
     public EventDTO(int id, String name, String location, LocalDateTime date, int id1, List<Integer> attendeeIds) {
         this.id = id;
