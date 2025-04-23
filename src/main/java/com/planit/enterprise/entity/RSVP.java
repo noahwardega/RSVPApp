@@ -30,12 +30,4 @@ public class RSVP {
         this.event = event;
         this.status = status;
     }
-
-    public int getUserId() {
-        return user.getId();
-    }
-
-    public int getEventId() {
-        return event.getId();
-    }
 }

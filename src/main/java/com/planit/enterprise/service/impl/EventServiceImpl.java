@@ -36,10 +36,6 @@ public class EventServiceImpl implements IEventService {
         return eventRepository.findById(id).orElseThrow(() -> new RuntimeException("Event not found"));
     }
 
-    public List<Event> getEventsInvitedTo(User user) {
-        return eventRepository.findByInvitedUsersContaining(user);
-    }
-
     @Override
     public Event saveEvent(Event event) {
         return eventRepository.save(event);

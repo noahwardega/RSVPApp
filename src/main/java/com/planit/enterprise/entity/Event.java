@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -46,11 +44,6 @@ public class Event {
         this.host = host;
     }
 
-    public List<Integer> getInviteeIds() {
-        return invitedUsers.stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-    }
 
 
 }
