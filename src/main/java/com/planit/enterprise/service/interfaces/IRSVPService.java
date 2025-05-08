@@ -12,7 +12,6 @@ public interface IRSVPService {
     List<RSVPDTO> getRSVPsByEvent(Event event);
 
     List<RSVPDTO> getRSVPsByUser(User user);
-
 }
 
 
